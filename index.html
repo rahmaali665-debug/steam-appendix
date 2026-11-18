@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html,body{margin:0}body{font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>ملاحق استكشاف الكهرباء</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Kufi+Arabic:wght@500;700;800&display=swap">
+<style>
+/* Layout: a blueprint desk for an electricity lesson. The book is drawn like a circuit: navy blueprint
+   covers and section dividers wired with a battery, a switch and a lit lamp; paper pages carry the
+   citation frame, the scanned page and a wire-and-node footer. */
+:root {
+  --desk: #091d36;
+  --desk-2: #10305a;
+  --grid: rgba(170, 205, 245, 0.06);
+  --ink: #eef4fc;
+  --muted: #a8c0dc;
+  --accent: #8cc0f5;
+  --glow: #ffd45a;
+  --panel: rgba(8, 26, 48, 0.66);
+  --panel-line: rgba(140, 192, 245, 0.28);
+  --shade: rgba(2, 10, 22, 0.6);
+  /* page (paper) tokens */
+  --paper: #fcfdfe;
+  --paper-ink: #13355e;
+  --paper-muted: #4a5f78;
+  --frame: #4a7ebb;
+  --frame-fill: #dbeff4;
+  --navy: #0f2f55;
+  --font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+  --font-head: "Noto Kufi Arabic", "IBM Plex Sans Arabic", Tahoma, Arial, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  color: var(--ink); font-family: var(--font-body); font-size: 15px;
+  background-color: var(--desk);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 40%, var(--desk-2) 0%, var(--desk) 72%);
+  background-size: 28px 28px, 28px 28px, 100% 100%;
+  background-attachment: fixed;
+}
+.app {
+  min-height: 100%; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box;
+  padding-block: 12px 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+header {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 18px;
+  background: var(--panel); border: 1px solid var(--panel-line); border-radius: 14px; padding: 10px 14px;
+}
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.bulb { width: 36px; height: 36px; flex: none; filter: drop-shadow(0 0 8px rgba(255, 212, 90, 0.55)); }
+.titles { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+h1 { font-family: var(--font-head); font-weight: 700; font-size: 1.08rem; margin: 0; line-height: 1.5; text-wrap: balance; }
+.sub { color: var(--muted); font-size: 0.82rem; }
+.picker { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.picker label { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+select {
+  font: inherit; font-size: 0.9rem; color: var(--ink); background: #0c2443;
+  border: 1px solid var(--panel-line); border-radius: 10px; padding: 7px 10px; max-width: min(440px, 72vw);
+}
+.where { text-align: center; font-family: var(--font-head); font-weight: 500; font-size: 0.95rem; color: var(--accent); min-height: 1.6em; }
+.stage { flex: 1; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; min-height: 0; }
+.bookwrap { width: 100%; margin-inline: auto; filter: drop-shadow(0 16px 30px var(--shade)); }
+#book { transform: scaleX(-1); }   /* mirrored so the book opens right-to-left like an Arabic book */
+
+/* ---------- pages ---------- */
+.page { background: var(--paper); container-type: size; overflow: hidden; }
+.pg { position: absolute; inset: 0; transform: scaleX(-1); direction: rtl; }
+.pg svg.art { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* navy pages: cover, dividers, back */
+.pg.navy { color: #fff; }
+.pg svg.art { direction: ltr; }
+.pg.navy .txt { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 2cqw; }
+.pg.navy .txt.cover { inset: 37% 16% 19%; }
+.pg.navy .txt.divider { inset: 31% 16% 15%; gap: 1.6cqw; }
+.pg.navy .txt.back { inset: 59% 10% 7%; }
+.eyebrow { font-family: var(--font-head); font-weight: 500; font-size: 3.4cqw; letter-spacing: 0.06em; color: var(--glow); }
+.num { font-family: var(--font-head); font-weight: 800; font-size: 12.5cqw; line-height: 1.1; text-shadow: 0 0.4cqw 1.6cqw rgba(0, 0, 0, 0.35); }
+.big { font-family: var(--font-head); font-weight: 800; font-size: 8.6cqw; line-height: 1.3; text-shadow: 0 0.4cqw 1.6cqw rgba(0, 0, 0, 0.35); }
+.mid2 { font-family: var(--font-head); font-weight: 500; font-size: 4.4cqw; color: #cfe3fa; line-height: 1.5; }
+.kind { font-family: var(--font-body); font-weight: 600; font-size: 4cqw; color: var(--glow); line-height: 1.5; }
+.ref { font-family: var(--font-body); font-size: 2.3cqw; color: #b9cfe8; line-height: 1.6; max-width: 92%; }
+.rule { width: 30%; height: 0.35cqw; border-radius: 1cqw; background: linear-gradient(to left, transparent, var(--glow), transparent); margin-block: 1cqw; }
+/* paper pages */
+.pg.paper { color: var(--paper-ink); }
+.paper .wrap { position: absolute; inset: 6.5% 7.5% 8.5%; display: flex; flex-direction: column; gap: 2.2cqw; }
+.hdr {
+  background: var(--frame-fill); border: 0.28cqw solid var(--frame); border-radius: 2.6cqw;
+  padding: 1.6cqw 2.6cqw; text-align: center; display: flex; flex-direction: column; gap: 0.6cqw;
+}
+.hdr .code { font-family: var(--font-head); font-weight: 700; font-size: 3.2cqw; color: var(--navy); }
+.hdr .cap { font-size: 2.55cqw; line-height: 1.55; }
+.hdr .locs { font-size: 2.4cqw; line-height: 1.6; color: var(--paper-muted); }
+.hdr .locs b { color: var(--paper-ink); font-weight: 600; }
+.shot { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.shot img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; border: 0.32cqw solid var(--frame); box-shadow: 0 0.8cqw 2.4cqw rgba(15, 47, 85, 0.22); background: #fff; }
+.ftr { position: absolute; inset: auto 7.5% 2.6%; display: flex; align-items: center; justify-content: space-between; font-size: 2.2cqw; color: var(--paper-muted); }
+.ftr .lbl { background: var(--paper); padding-inline: 1.2cqw; }
+.ftr .no { background: var(--paper); border: 0.28cqw solid var(--frame); color: var(--navy); border-radius: 50%; width: 5.6cqw; height: 5.6cqw; display: grid; place-items: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---------- simulation page: a desktop computer inside the book ---------- */
+.simpage { position: absolute; inset: 5.5% 7% 4%; display: flex; flex-direction: column; align-items: center; gap: 1.4cqw; text-align: center; }
+.simtitle { font-family: var(--font-head); font-weight: 800; font-size: 6.2cqw; line-height: 1.4; text-shadow: 0 0.4cqw 1.6cqw rgba(0, 0, 0, 0.35); }
+.monitor {
+  position: relative; width: 100%; box-sizing: border-box; margin-top: 1.6cqw;
+  padding: 2.2cqw 2.2cqw 4.2cqw; border-radius: 2.6cqw;
+  background: linear-gradient(160deg, #3a4048, #1b1f25 55%, #111418);
+  box-shadow: 0 1.6cqw 4cqw rgba(0, 0, 0, 0.5), inset 0 0.25cqw 0 rgba(255, 255, 255, 0.12);
+}
+.monitor .cam { position: absolute; top: 0.8cqw; left: 50%; width: 0.9cqw; height: 0.9cqw; margin-left: -0.45cqw; border-radius: 50%; background: #0b0d10; box-shadow: inset 0 0 0 0.2cqw #2a3038; }
+.monitor .led { position: absolute; bottom: 1.6cqw; left: 3cqw; width: 1cqw; height: 1cqw; border-radius: 50%; background: #3c4650; }
+.monitor.on .led { background: #4cff8a; box-shadow: 0 0 1.2cqw #4cff8a; }
+.screen { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 0.6cqw; background: radial-gradient(ellipse at 50% 40%, #1d4a7a, #0a1f38 75%); box-shadow: inset 0 0 0 0.25cqw #000; }
+.screen iframe { position: absolute; top: 0; left: 0; width: 1024px; height: 640px; border: 0; transform-origin: 0 0; background: #fff; }
+.power { position: absolute; inset: 0; width: 100%; border: 0; border-radius: 0; background: transparent; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2cqw; cursor: pointer; padding: 0; }
+.power .pw-ico { width: 13cqw; height: 13cqw; border-radius: 50%; display: grid; place-items: center; font-size: 7cqw; color: #0b2140; background: radial-gradient(circle at 35% 30%, #fff6cc, #ffd45a 55%, #d99a12); box-shadow: 0 0 3cqw rgba(255, 212, 90, 0.55); }
+.power .pw-t { font-family: var(--font-head); font-weight: 700; font-size: 3.6cqw; }
+.power .pw-s { font-size: 2.6cqw; color: #a8c0dc; }
+.power:hover .pw-ico { box-shadow: 0 0 4.5cqw rgba(255, 212, 90, 0.8); }
+.neck { width: 16%; height: 4.5cqw; background: linear-gradient(90deg, #6d747c, #d8dde2 45%, #8b929a); clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%); }
+.foot { width: 42%; height: 2.2cqw; border-radius: 1.4cqw 1.4cqw 0.6cqw 0.6cqw; background: linear-gradient(180deg, #e2e6ea, #8b929a); box-shadow: 0 1cqw 2cqw rgba(0, 0, 0, 0.45); }
+.simrow { display: flex; gap: 2cqw; margin-top: 1.2cqw; }
+.simbig { font-size: 2.8cqw; padding: 1.2cqw 3.6cqw; border-radius: 1.6cqw; background: var(--accent); border-color: var(--accent); color: #0b2140; font-weight: 600; }
+.simhow { font-size: 2.7cqw; line-height: 1.7; color: #dbe8f7; max-width: 92%; }
+.simref { font-size: 2.2cqw; line-height: 1.6; color: var(--glow); max-width: 94%; }
+.simlic { font-size: 2cqw; color: #a8c0dc; }
+#simZoom {
+  position: fixed; inset: 0; z-index: 30; overflow: auto;
+  background: radial-gradient(ellipse at 50% 30%, #143a66, #081a30 75%);
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.simwrap { width: min(100%, calc((100vh - 170px) * 1.6 + 60px)); margin-inline: auto; display: flex; flex-direction: column; align-items: center; container-type: inline-size; }
+.simbar { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.monitor.big { padding: 16px 16px 30px; border-radius: 18px; margin-top: 0; }
+.monitor.big .cam { top: 6px; width: 7px; height: 7px; margin-left: -3.5px; }
+.monitor.big .led { bottom: 11px; left: 22px; width: 8px; height: 8px; }
+.monitor.big .screen iframe { width: 100%; height: 100%; transform: none; }
+.neck.big { height: 34px; }
+.foot.big { height: 16px; border-radius: 12px 12px 5px 5px; }
+
+/* ---------- controls ---------- */
+.side {
+  width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--panel-line); color: var(--ink); padding: 0;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.side:hover:not(:disabled) { background: rgba(140, 192, 245, 0.18); border-color: var(--accent); transform: scale(1.06); }
+.side svg { width: 24px; height: 24px; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.mid { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+button { font: inherit; font-size: 0.9rem; cursor: pointer; border-radius: 10px; padding: 8px 14px; border: 1px solid var(--panel-line); background: var(--panel); color: var(--ink); display: inline-flex; align-items: center; gap: 8px; }
+button svg { width: 18px; height: 18px; flex: none; }
+button.go { background: var(--accent); border-color: var(--accent); color: #0b2140; font-weight: 600; }
+button:focus-visible, select:focus-visible { outline: 3px solid var(--glow); outline-offset: 2px; }
+button:disabled { opacity: 0.4; cursor: default; }
+.count { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.88rem; min-width: 10em; text-align: center; }
+.wire { position: relative; height: 4px; border-radius: 4px; background: rgba(140, 192, 245, 0.22); }
+.wire .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; border-radius: 4px; background: linear-gradient(to left, var(--accent), var(--glow)); transition: width 0.5s ease; }
+.wire .fill::after { content: ""; position: absolute; inset-inline-end: -5px; top: -4px; width: 12px; height: 12px; border-radius: 50%; background: var(--glow); box-shadow: 0 0 10px 3px rgba(255, 212, 90, 0.6); }
+.hint { text-align: center; color: var(--muted); font-size: 0.78rem; }
+#zoom {
+  position: fixed; inset: 0; z-index: 20; overflow-y: auto; background: rgba(8, 24, 44, 0.97);
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.zoombar { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-block: 10px; background: rgba(8, 24, 44, 0.97); }
+.zoompages { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.zoompages img { width: 100%; max-width: 1000px; background: #fff; box-shadow: 0 4px 18px var(--shade); }
+.zoomnote { color: var(--muted); text-align: center; padding: 24px; }
+.fallback { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.fallback .page { position: relative; width: min(100%, 640px); aspect-ratio: 1000 / 1295; }
+@media (max-width: 760px) {
+  .side { display: none; }
+  .stage { grid-template-columns: minmax(0, 1fr); }
+  h1 { font-size: 0.98rem; }
+}
+@media (prefers-reduced-motion: reduce) { .side, .wire .fill { transition: none; } }
+</style>
+
+<svg id="defs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="bgN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#17446f"/><stop offset="1" stop-color="#0a2240"/></linearGradient>
+    <pattern id="gr" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#9cc6f2" stroke-opacity=".08" stroke-width="1.2"/></pattern>
+    <radialGradient id="halo"><stop offset="0" stop-color="#fff6cc" stop-opacity=".9"/><stop offset=".35" stop-color="#ffd45a" stop-opacity=".42"/><stop offset="1" stop-color="#ffd45a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glassOn" cx=".45" cy=".4" r=".65"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#fff4c2"/><stop offset=".8" stop-color="#ffd86b"/><stop offset="1" stop-color="#f5b93a"/></radialGradient>
+    <radialGradient id="glassOff" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffffff" stop-opacity=".8"/><stop offset=".6" stop-color="#dfe9f3" stop-opacity=".5"/><stop offset="1" stop-color="#b9c9da" stop-opacity=".6"/></radialGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5f666e"/><stop offset=".3" stop-color="#d9dee3"/><stop offset=".55" stop-color="#f4f6f8"/><stop offset=".8" stop-color="#9aa1a9"/><stop offset="1" stop-color="#596068"/></linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d858d"/><stop offset=".35" stop-color="#eef1f4"/><stop offset="1" stop-color="#6a7178"/></linearGradient>
+    <linearGradient id="battBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3f45"/><stop offset=".25" stop-color="#6b7279"/><stop offset=".5" stop-color="#2a2e33"/><stop offset="1" stop-color="#121417"/></linearGradient>
+    <linearGradient id="battCap" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a5418"/><stop offset=".25" stop-color="#f3b06b"/><stop offset=".55" stop-color="#c06a22"/><stop offset="1" stop-color="#6e3a0e"/></linearGradient>
+    <radialGradient id="brass" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#fff2b0"/><stop offset=".5" stop-color="#e2b33c"/><stop offset="1" stop-color="#8a6512"/></radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dcb983"/><stop offset="1" stop-color="#b48a52"/></linearGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="drop" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity=".35"/></filter>
+  </defs>
+</svg>
+
+<div class="app" dir="rtl" lang="ar">
+  <header>
+    <div class="brand">
+      <svg class="bulb" viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M20 4a11 11 0 0 0-6.6 19.8c1.3 1 2.1 2.4 2.1 4V29h9v-1.2c0-1.6.8-3 2.1-4A11 11 0 0 0 20 4z" fill="#ffd45a"/>
+        <path d="M16 23l2.2-6 1.8 3 1.8-3L24 23" fill="none" stroke="#8a5a00" stroke-width="1.4" stroke-linejoin="round"/>
+        <rect x="15.5" y="30" width="9" height="2.6" rx="1.3" fill="#bcd8ff"/>
+        <rect x="16.5" y="33.6" width="7" height="2.6" rx="1.3" fill="#bcd8ff"/>
+      </svg>
+      <div class="titles">
+        <h1>ملاحق التكليف 3: مخطط STEAM لدرس «استكشاف الكهرباء»</h1>
+      </div>
+    </div>
+    <div class="picker">
+      <label for="toc">انتقل إلى</label>
+      <select id="toc"></select>
+    </div>
+  </header>
+
+  <div class="where" id="where" aria-live="polite">الغلاف</div>
+
+  <main class="stage">
+    <button class="side" id="sidePrev" type="button" aria-label="الصفحة السابقة">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <div class="bookwrap" id="bookwrap"><div id="book"></div></div>
+    <button class="side" id="sideNext" type="button" aria-label="الصفحة التالية">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+  </main>
+
+  <div class="wire" aria-hidden="true"><div class="fill" id="fill"></div></div>
+
+  <div class="bar" id="bar">
+    <button id="prev" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+      السابقة
+    </button>
+    <div class="mid">
+      <span class="count" id="count">الغلاف</span>
+      <button id="zoomBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21M11 8v6M8 11h6"/></svg>
+        تكبير الصفحة
+      </button>
+    </div>
+    <button id="next" type="button" class="go">
+      التالية
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+  </div>
+  <div class="hint">اسحب زاوية الصفحة أو انقر طرفها لقلبها · السهم الأيسر للتالية والأيمن للسابقة</div>
+</div>
+
+<div id="zoom" dir="rtl" lang="ar" hidden>
+  <div class="zoombar">
+    <strong id="zoomTitle">الصفحة مكبّرة</strong>
+    <button id="zoomClose" type="button" class="go">إغلاق</button>
+  </div>
+  <div class="zoompages" id="zoomPages"></div>
+</div>
+
+<div id="simZoom" dir="rtl" lang="ar" hidden>
+  <div class="simwrap">
+    <div class="simbar">
+      <strong>محاكاة PhET: مجموعة بناء الدوائر (تيار مستمر)</strong>
+      <button id="simClose" type="button" class="go">إغلاق الشاشة</button>
+    </div>
+    <div class="monitor big on"><span class="cam"></span><div class="screen" id="simBig"></div><span class="led"></span></div>
+    <div class="neck big"></div><div class="foot big"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+<script>
+(function () {
+  var DATA = {"pages": [{"t": "cover"}, {"t": "divider", "i": 1, "subj": "العلوم", "grade": "الصف الثاني الابتدائي – الجزء الثاني", "kind": "كتاب الطالب", "ref": "وزارة التربية والتعليم. (2013د). العلوم: الصف الثاني، الجزء الثاني (ط. 2). العبيكان.", "label": "ملحق (1): العلوم – كتاب الطالب – الصف الثاني الابتدائي"}, {"t": "page", "i": 1, "subj": "العلوم", "code": "غلاف الكتاب", "cap": "كتاب الطالب – العلوم – الصف الثاني الابتدائي – الجزء الثاني", "locs": null, "img": "img/a01_001.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 77", "cap": "بيانات الدرس: صفحة افتتاح «الوحدة السادسة: القوى والطاقة»", "locs": null, "img": "img/a01_002.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 89", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — فرص الربط الرأسي", "img": "img/a01_003.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 98", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — فرص الربط الرأسي", "img": "img/a01_004.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 99", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — فرص الربط الرأسي", "img": "img/a01_005.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 102", "cap": null, "locs": "بيانات الدرس: ضمن صفحات الدرس (صفحات الكتاب)", "img": "img/a01_006.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 103", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — المهارات؛ الكهرباء المتحركة (صف الاستقصاء 1) — نشاط الاستقصاء المقترح", "img": "img/a01_007.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 104", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — المحتوى؛ الكهرباء المتحركة (صف الاستقصاء 1) — المهارات", "img": "img/a01_008.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 105", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — المحتوى؛ الكهرباء الساكنة (صف الاستقصاء 2) — المهارات؛ الكهرباء الساكنة (صف الاستقصاء 2) — نشاط الاستقصاء المقترح", "img": "img/a01_009.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 106", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — المهارات؛ الكهرباء الساكنة (صف الاستقصاء 2) — الاتجاهات؛ المشكلة 3 (لعبة الصيد) — مهارات القرن 21", "img": "img/a01_010.jpg", "land": false}, {"t": "page", "i": 1, "subj": "العلوم", "code": "ك/ص. 107", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — المحتوى؛ الكهرباء المتحركة (صف الاستقصاء 1) — الاتجاهات", "img": "img/a01_011.jpg", "land": false}, {"t": "divider", "i": 2, "subj": "العلوم", "grade": "الصف الثاني الابتدائي – الجزء الثاني", "kind": "دليل المعلم", "ref": "وزارة التربية والتعليم. (2013ب). العلوم: دليل المعلم، الصف الثاني الابتدائي، الجزء الثاني (ط. 2). العبيكان.", "label": "ملحق (2): العلوم – دليل المعلم – الصف الثاني الابتدائي"}, {"t": "page", "i": 2, "subj": "العلوم", "code": "غلاف الكتاب", "cap": "دليل المعلم – العلوم – الصف الثاني الابتدائي – الجزء الثاني", "locs": null, "img": "img/a02_012.jpg", "land": false}, {"t": "page", "i": 2, "subj": "العلوم", "code": "د – فهرس دليل المعلم (ص. 8 من ملف PDF)", "cap": "بيانات الدرس: فهرس الدليل («الفصل الثاني عشر» – «الدرس الثاني: استكشاف الكهرباء»)", "locs": null, "img": "img/a02_013.jpg", "land": false}, {"t": "page", "i": 2, "subj": "العلوم", "code": "د/ص. 102", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — نشاط الاستقصاء المقترح", "img": "img/a02_014.jpg", "land": false}, {"t": "page", "i": 2, "subj": "العلوم", "code": "د/ص. 103", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — المهارات؛ الكهرباء المتحركة (صف الاستقصاء 1) — الاتجاهات؛ المشكلة 2 (بيت الدمى) — نص المشكلة والتصميم", "img": "img/a02_015.jpg", "land": false}, {"t": "page", "i": 2, "subj": "العلوم", "code": "د/ص. 104", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — المهارات؛ الكهرباء المتحركة (صف الاستقصاء 1) — فرص الربط الرأسي؛ الكهرباء المتحركة (صف الاستقصاء 1) — نشاط الاستقصاء المقترح", "img": "img/a02_016.jpg", "land": false}, {"t": "page", "i": 2, "subj": "العلوم", "code": "د/ص. 105", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — المحتوى؛ الكهرباء الساكنة (صف الاستقصاء 2) — الاتجاهات", "img": "img/a02_017.jpg", "land": false}, {"t": "page", "i": 2, "subj": "العلوم", "code": "د/ص. 106", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — المهارات؛ الكهرباء الساكنة (صف الاستقصاء 2) — الاتجاهات", "img": "img/a02_018.jpg", "land": false}, {"t": "page", "i": 2, "subj": "العلوم", "code": "د/ص. 107", "cap": null, "locs": "بيانات الدرس: ضمن صفحات الدرس (صفحات الكتاب)", "img": "img/a02_019.jpg", "land": false}, {"t": "page", "i": 2, "subj": "العلوم", "code": "د/ص. 108", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — المهارات", "img": "img/a02_020.jpg", "land": false}, {"t": "divider", "i": 3, "subj": "العلوم", "grade": "الصف الثاني الابتدائي – الجزء الثاني", "kind": "كراسة النشاط", "ref": "وزارة التربية والتعليم. (2013هـ). العلوم: كراسة النشاط، الصف الثاني، الجزء الثاني (ط. 2). العبيكان.", "label": "ملحق (3): العلوم – كراسة النشاط – الصف الثاني الابتدائي"}, {"t": "page", "i": 3, "subj": "العلوم", "code": "غلاف الكتاب", "cap": "كراسة النشاط – العلوم – الصف الثاني الابتدائي – الجزء الثاني", "locs": null, "img": "img/a03_021.jpg", "land": false}, {"t": "page", "i": 3, "subj": "العلوم", "code": "ن/ص. 48", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — نشاط الاستقصاء المقترح", "img": "img/a03_022.jpg", "land": false}, {"t": "page", "i": 3, "subj": "العلوم", "code": "ن/ص. 49", "cap": null, "locs": "بيانات الدرس: ضمن صفحات الدرس (صفحات الكتاب)", "img": "img/a03_023.jpg", "land": false}, {"t": "page", "i": 3, "subj": "العلوم", "code": "ن/ص. 50", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — نشاط الاستقصاء المقترح", "img": "img/a03_024.jpg", "land": false}, {"t": "divider", "i": 4, "subj": "العلوم", "grade": "الصف الأول الابتدائي – الجزء الثاني", "kind": "كتاب الطالب", "ref": "وزارة التربية والتعليم. (2025). العلوم: الصف الأول، الجزء الثاني (ط. 3). العبيكان.", "label": "ملحق (4): العلوم – كتاب الطالب – الصف الأول الابتدائي"}, {"t": "page", "i": 4, "subj": "العلوم", "code": "غلاف الكتاب", "cap": "كتاب الطالب – العلوم – الصف الأول الابتدائي – الجزء الثاني", "locs": null, "img": "img/a04_025.jpg", "land": false}, {"t": "page", "i": 4, "subj": "العلوم", "code": "ك-الصف الأول، ج. 2، ص. 88", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — فرص الربط الرأسي", "img": "img/a04_026.jpg", "land": false}, {"t": "page", "i": 4, "subj": "العلوم", "code": "ك-الصف الأول، ج. 2، ص. 90", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — فرص الربط الرأسي", "img": "img/a04_027.jpg", "land": false}, {"t": "divider", "i": 5, "subj": "العلوم", "grade": "الصف الثالث الابتدائي – الجزء الثاني", "kind": "كتاب الطالب", "ref": "وزارة التربية والتعليم. (2013ج). العلوم: الصف الثالث، الجزء الثاني (ط. 2). العبيكان.", "label": "ملحق (5): العلوم – كتاب الطالب – الصف الثالث الابتدائي"}, {"t": "page", "i": 5, "subj": "العلوم", "code": "غلاف الكتاب", "cap": "كتاب الطالب – العلوم – الصف الثالث الابتدائي – الجزء الثاني", "locs": null, "img": "img/a05_028.jpg", "land": false}, {"t": "page", "i": 5, "subj": "العلوم", "code": "ك-الصف الثالث، ج. 2، ص. 120", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — فرص الربط الرأسي", "img": "img/a05_029.jpg", "land": false}, {"t": "page", "i": 5, "subj": "العلوم", "code": "ك-الصف الثالث، ج. 2، ص. 122", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — فرص الربط الرأسي", "img": "img/a05_030.jpg", "land": false}, {"t": "page", "i": 5, "subj": "العلوم", "code": "ك-الصف الثالث، ج. 2، ص. 123", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — فرص الربط الرأسي", "img": "img/a05_031.jpg", "land": false}, {"t": "page", "i": 5, "subj": "العلوم", "code": "ك-الصف الثالث، ج. 2، ص. 124", "cap": null, "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — فرص الربط الرأسي", "img": "img/a05_032.jpg", "land": false}, {"t": "divider", "i": 6, "subj": "العلوم", "grade": "الصف الثالث الابتدائي – الجزء الثاني", "kind": "دليل المعلم", "ref": "وزارة التربية والتعليم. (2013أ). العلوم: دليل المعلم، الصف الثالث الابتدائي، الجزء الثاني (ط. 2). العبيكان.", "label": "ملحق (6): العلوم – دليل المعلم – الصف الثالث الابتدائي"}, {"t": "page", "i": 6, "subj": "العلوم", "code": "غلاف الكتاب", "cap": "دليل المعلم – العلوم – الصف الثالث الابتدائي – الجزء الثاني", "locs": null, "img": "img/a06_033.jpg", "land": false}, {"t": "page", "i": 6, "subj": "العلوم", "code": "د-الصف الثالث، ج. 2، ص. 118", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — فرص الربط الرأسي", "img": "img/a06_034.jpg", "land": false}, {"t": "divider", "i": 7, "subj": "اللغة العربية", "grade": "الصف الثاني الابتدائي – الجزء الثاني", "kind": "براعم العربية", "ref": "وزارة التربية والتعليم. (2022). براعم العربية للصف الثاني، الجزء الثاني. https://www.edunet.bh/e_content/level_1/stage_2/subject_ID_1/Part_2/e_books/Arabic-G2-Baraem-P2-2022/Arabic%20G2%20Baraem%20P2%202022/index.html", "label": "ملحق (7): اللغة العربية – براعم العربية – الصف الثاني الابتدائي"}, {"t": "divider", "i": 8, "subj": "التربية الفنية", "grade": "الصف الثاني الابتدائي", "kind": "كتاب الطالب", "ref": "وزارة التربية والتعليم. (2026ب). التربية الفنية للصف الثاني: كتاب الطالب.", "label": "ملحق (8): التربية الفنية – كتاب الطالب – الصف الثاني الابتدائي"}, {"t": "page", "i": 8, "subj": "التربية الفنية", "code": "غلاف الكتاب", "cap": "كتاب الطالب – التربية الفنية – الصف الثاني الابتدائي", "locs": null, "img": "img/a08_035.jpg", "land": false}, {"t": "page", "i": 8, "subj": "التربية الفنية", "code": "وزارة التربية والتعليم، 2026ب، ص. 71", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية الفنية", "img": "img/a08_036.jpg", "land": false}, {"t": "page", "i": 8, "subj": "التربية الفنية", "code": "وزارة التربية والتعليم، 2026ب، ص. 83", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — التربية الفنية", "img": "img/a08_037.jpg", "land": false}, {"t": "page", "i": 8, "subj": "التربية الفنية", "code": "وزارة التربية والتعليم، 2026ب، ص. 99", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — التربية الفنية", "img": "img/a08_038.jpg", "land": false}, {"t": "divider", "i": 9, "subj": "الرياضيات", "grade": "الصف الثاني الابتدائي – الجزء الثاني", "kind": "كتاب الطالب", "ref": "وزارة التربية والتعليم. (2026ج). الرياضيات: الصف الثاني، الجزء الثاني (ط. 4). العبيكان.", "label": "ملحق (9): الرياضيات – كتاب الطالب – الصف الثاني الابتدائي"}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "غلاف الكتاب", "cap": "كتاب الطالب – الرياضيات – الصف الثاني الابتدائي – الجزء الثاني", "locs": null, "img": "img/a09_039.jpg", "land": false}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "وزارة التربية والتعليم، 2026ج، ص. 64", "cap": null, "locs": "الكهرباء الساكنة (صف الاستقصاء 2) — نشاط الاستقصاء المقترح", "img": "img/a09_040.jpg", "land": false}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "وزارة التربية والتعليم، 2026ج، ص. 76", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — الرياضيات", "img": "img/a09_041.jpg", "land": false}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "وزارة التربية والتعليم، 2026ج، ص. 77", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — الرياضيات", "img": "img/a09_042.jpg", "land": false}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "وزارة التربية والتعليم، 2026ج، ص. 78", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — الرياضيات", "img": "img/a09_043.jpg", "land": false}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "وزارة التربية والتعليم، 2026ج، ص. 79", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — الرياضيات", "img": "img/a09_044.jpg", "land": false}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "وزارة التربية والتعليم، 2026ج، ص. 100", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — الرياضيات", "img": "img/a09_045.jpg", "land": false}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "وزارة التربية والتعليم، 2026ج، ص. 106", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — الرياضيات", "img": "img/a09_046.jpg", "land": false}, {"t": "page", "i": 9, "subj": "الرياضيات", "code": "وزارة التربية والتعليم، 2026ج، ص. 130", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — الرياضيات", "img": "img/a09_047.jpg", "land": false}, {"t": "divider", "i": 10, "subj": "التربية الإسلامية", "grade": "الصف الثاني الابتدائي – الجزء الثاني", "kind": "كتاب الطالب", "ref": "وزارة التربية والتعليم. (2026أ). التربية الإسلامية للصف الثاني، الجزء الثاني (ط. 3).", "label": "ملحق (10): التربية الإسلامية – كتاب الطالب – الصف الثاني الابتدائي"}, {"t": "page", "i": 10, "subj": "التربية الإسلامية", "code": "غلاف الكتاب", "cap": "كتاب الطالب – التربية الإسلامية – الصف الثاني الابتدائي – الجزء الثاني", "locs": null, "img": "img/a10_048.jpg", "land": false}, {"t": "page", "i": 10, "subj": "التربية الإسلامية", "code": "وزارة التربية والتعليم، 2026أ، ص. 67", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — التربية الإسلامية", "img": "img/a10_049.jpg", "land": false}, {"t": "page", "i": 10, "subj": "التربية الإسلامية", "code": "وزارة التربية والتعليم، 2026أ، ص. 68", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — التربية الإسلامية", "img": "img/a10_050.jpg", "land": false}, {"t": "page", "i": 10, "subj": "التربية الإسلامية", "code": "وزارة التربية والتعليم، 2026أ، ص. 74", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — التربية الإسلامية", "img": "img/a10_051.jpg", "land": false}, {"t": "page", "i": 10, "subj": "التربية الإسلامية", "code": "وزارة التربية والتعليم، 2026أ، ص. 75", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — التربية الإسلامية", "img": "img/a10_052.jpg", "land": false}, {"t": "page", "i": 10, "subj": "التربية الإسلامية", "code": "وزارة التربية والتعليم، 2026أ، ص. 76", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — التربية الإسلامية", "img": "img/a10_053.jpg", "land": false}, {"t": "divider", "i": 11, "subj": "التربية للمواطنة", "grade": "الصف الثاني الابتدائي", "kind": "كتاب الطالب", "ref": "وزارة التربية والتعليم. (2023). التربية للمواطنة للصف الثاني: كتاب الطالب.", "label": "ملحق (11): التربية للمواطنة – كتاب الطالب – الصف الثاني الابتدائي"}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "غلاف الكتاب", "cap": "كتاب الطالب – التربية للمواطنة – الصف الثاني الابتدائي", "locs": null, "img": "img/a11_054.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 72", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — التربية للمواطنة", "img": "img/a11_055.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 73", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — التربية للمواطنة", "img": "img/a11_056.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 74", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — التربية للمواطنة", "img": "img/a11_057.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 75", "cap": null, "locs": "المشكلة 2 (بيت الدمى) — التربية للمواطنة", "img": "img/a11_058.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 96", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_059.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 97", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_060.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 98", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_061.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 99", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_062.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 100", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_063.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 101", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_064.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 102", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_065.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 103", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_066.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 104", "cap": null, "locs": "المشكلة 3 (لعبة الصيد) — التربية للمواطنة", "img": "img/a11_067.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 114", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — التربية للمواطنة", "img": "img/a11_068.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 115", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — التربية للمواطنة", "img": "img/a11_069.jpg", "land": false}, {"t": "page", "i": 11, "subj": "التربية للمواطنة", "code": "وزارة التربية والتعليم، 2023، ص. 116", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — التربية للمواطنة", "img": "img/a11_070.jpg", "land": false}, {"t": "divider", "i": 12, "subj": "شرائح المقرر", "grade": "الأسبوع 8.1", "kind": "التخطيط لحصة تكامل عبر التخصصات من خلال STEAM", "ref": "كلية محمد بن جابر الأنصاري. (2026أ). التخطيط لحصة تكامل عبر التخصصات من خلال STEAM [عرض تقديمي، الأسبوع 8.1]. مقرر TCST418، جامعة البحرين.", "label": "ملحق (12): شرائح المقرر – الأسبوع 8.1"}, {"t": "page", "i": 12, "subj": "شرائح المقرر", "code": "الشريحة الأولى: عنوان العرض", "cap": "شرائح المقرر – الأسبوع 8.1", "locs": null, "img": "img/a12_071.jpg", "land": true}, {"t": "page", "i": 12, "subj": "شرائح المقرر", "code": "كلية محمد بن جابر الأنصاري، 2026أ – الشريحة 15", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — اللغة العربية", "img": "img/a12_072.jpg", "land": true}, {"t": "divider", "i": 13, "subj": "شرائح المقرر", "grade": "الأسبوع 8.2", "kind": "تضمين المهن المستقبلية في دروس STEAM", "ref": "كلية محمد بن جابر الأنصاري. (2026ب). تضمين المهن المستقبلية في دروس STEAM لطلبة صفوف الحلقة الأولى [عرض تقديمي، الأسبوع 8.2]. مقرر TCST418، جامعة البحرين.", "label": "ملحق (13): شرائح المقرر – الأسبوع 8.2"}, {"t": "page", "i": 13, "subj": "شرائح المقرر", "code": "الشريحة الأولى: عنوان العرض", "cap": "شرائح المقرر – الأسبوع 8.2", "locs": null, "img": "img/a13_073.jpg", "land": true}, {"t": "page", "i": 13, "subj": "شرائح المقرر", "code": "كلية محمد بن جابر الأنصاري، 2026ب – الشريحة 6", "cap": "معايير اختيار المهنة الأربعة: الواقعية والتحرر من الصورة النمطية (المهن في المشكلات 1–3)", "locs": "المشكلة 1 (مصباح الجدة) — نص المشكلة والتصميم", "img": "img/a13_074.jpg", "land": true}, {"t": "page", "i": 13, "subj": "شرائح المقرر", "code": "كلية محمد بن جابر الأنصاري، 2026ب – الشريحة 7", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — نص المشكلة والتصميم", "img": "img/a13_075.jpg", "land": true}, {"t": "page", "i": 13, "subj": "شرائح المقرر", "code": "كلية محمد بن جابر الأنصاري، 2026ب – الشريحة 21", "cap": null, "locs": "المشكلة 1 (مصباح الجدة) — نص المشكلة والتصميم", "img": "img/a13_076.jpg", "land": true}, {"t": "divider", "i": 14, "subj": "مهارات القرن 21", "grade": "الحمادي (2024)", "kind": "عرض تقديمي", "ref": "الحمادي، أ. خ. (2024). مهارات القرن الحادي والعشرين [عرض تقديمي]. قسم الرياضيات والعلوم وتكنولوجيا التعليم، كلية محمد بن جابر الأنصاري، جامعة البحرين.", "label": "ملحق (14): مهارات القرن 21 – الحمادي (2024)"}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 1", "cap": "غلاف العرض", "locs": null, "img": "img/a14_077.jpg", "land": true}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 2", "cap": "التفكير الناقد وحل المشكلات: «تحليل الأدلة» (المشكلة 1)", "locs": null, "img": "img/a14_078.jpg", "land": true}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 3", "cap": "التعاون والتواصل: «التعاون مع الأقران ومشاركة وجهات النظر» (المشكلة 2)", "locs": null, "img": "img/a14_079.jpg", "land": true}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 4", "cap": "الإبداع والابتكار: «توليد الأفكار الأصيلة» (المشكلة 2)", "locs": null, "img": "img/a14_080.jpg", "land": true}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 5", "cap": "المعرفة المعلوماتية: «تحديد المعلومات واستخدامها بفاعلية» (المشكلة 3)", "locs": null, "img": "img/a14_081.jpg", "land": true}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 6", "cap": "المعرفة الرقمية: «الاستفادة من التكنولوجيا بفاعلية للتعلم» (المشكلة 1)", "locs": null, "img": "img/a14_082.jpg", "land": true}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 7", "cap": "الوعي العالمي والثقافي: «احترام التنوع الثقافي وتقديره» (المشكلة 3)", "locs": null, "img": "img/a14_083.jpg", "land": true}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 8", "cap": "القدرة على التكيف والمرونة: «التعامل مع التحديات كفرص للنمو» (المشكلة 3)", "locs": null, "img": "img/a14_084.jpg", "land": true}, {"t": "page", "i": 14, "subj": "مهارات القرن 21", "code": "الحمادي، 2024 – ص. 9", "cap": "الذكاء العاطفي: «التعاطف» (المشكلة 1)", "locs": null, "img": "img/a14_085.jpg", "land": true}, {"t": "divider", "i": 15, "subj": "مستويات الاستقصاء", "grade": "Herron (1971)", "kind": "شرائح الأسبوع 4", "ref": "Herron, M. D. (1971). The nature of scientific inquiry. The School Review, 79(2), 171–212. https://doi.org/10.1086/442908", "label": "ملحق (15): مستويات الاستقصاء – Herron (1971)"}, {"t": "page", "i": 15, "subj": "مستويات الاستقصاء", "code": "الشريحة الأولى: عنوان العرض", "cap": "مستويات الاستقصاء – Herron (1971)", "locs": null, "img": "img/a15_086.jpg", "land": true}, {"t": "page", "i": 15, "subj": "مستويات الاستقصاء", "code": "Herron, 1971 – شرائح الأسبوع 4، ص. 17 من ملف PDF", "cap": "المستويات الأربعة", "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — نشاط الاستقصاء المقترح؛ الكهرباء الساكنة (صف الاستقصاء 2) — نشاط الاستقصاء المقترح", "img": "img/a15_087.jpg", "land": true}, {"t": "page", "i": 15, "subj": "مستويات الاستقصاء", "code": "Herron, 1971 – شرائح الأسبوع 4، ص. 22 من ملف PDF", "cap": "الاستقصاء التأكيدي والاستقصاء الهيكلي (مستوى الاستقصاء 1)", "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — نشاط الاستقصاء المقترح؛ الكهرباء الساكنة (صف الاستقصاء 2) — نشاط الاستقصاء المقترح", "img": "img/a15_088.jpg", "land": true}, {"t": "page", "i": 15, "subj": "مستويات الاستقصاء", "code": "Herron, 1971 – شرائح الأسبوع 4، ص. 18 من ملف PDF", "cap": "الاستقصاء الموجّه (مستوى الاستقصاء 2) والاستقصاء المفتوح", "locs": "الكهرباء المتحركة (صف الاستقصاء 1) — نشاط الاستقصاء المقترح؛ الكهرباء الساكنة (صف الاستقصاء 2) — نشاط الاستقصاء المقترح", "img": "img/a15_089.jpg", "land": true}, {"t": "divider", "i": 16, "subj": "محاكاة PhET", "grade": "الدوائر الكهربائية", "kind": "Circuit Construction Kit: DC", "ref": "PhET Interactive Simulations. (n.d.). Circuit construction kit: DC [Computer simulation]. University of Colorado Boulder. https://phet.colorado.edu/en/simulations/circuit-construction-kit-dc", "label": "ملحق (16): محاكاة PhET – الدوائر الكهربائية"}, {"t": "sim", "i": 16}, {"t": "back"}], "toc": [["الغلاف", 0], ["ملحق (1): العلوم – كتاب الطالب – الصف الثاني الابتدائي", 1], ["ملحق (2): العلوم – دليل المعلم – الصف الثاني الابتدائي", 13], ["ملحق (3): العلوم – كراسة النشاط – الصف الثاني الابتدائي", 23], ["ملحق (4): العلوم – كتاب الطالب – الصف الأول الابتدائي", 28], ["ملحق (5): العلوم – كتاب الطالب – الصف الثالث الابتدائي", 32], ["ملحق (6): العلوم – دليل المعلم – الصف الثالث الابتدائي", 38], ["ملحق (7): اللغة العربية – براعم العربية – الصف الثاني الابتدائي", 41], ["ملحق (8): التربية الفنية – كتاب الطالب – الصف الثاني الابتدائي", 42], ["ملحق (9): الرياضيات – كتاب الطالب – الصف الثاني الابتدائي", 47], ["ملحق (10): التربية الإسلامية – كتاب الطالب – الصف الثاني الابتدائي", 57], ["ملحق (11): التربية للمواطنة – كتاب الطالب – الصف الثاني الابتدائي", 64], ["ملحق (12): شرائح المقرر – الأسبوع 8.1", 82], ["ملحق (13): شرائح المقرر – الأسبوع 8.2", 85], ["ملحق (14): مهارات القرن 21 – الحمادي (2024)", 90], ["ملحق (15): مستويات الاستقصاء – Herron (1971)", 100], ["ملحق (16): محاكاة PhET – الدوائر الكهربائية", 105]]};
+  var P = DATA.pages, TOC = DATA.toc, total = P.length;
+  var SIM = 'phet/cck-dc-ar.html';
+
+  // the small screen on the page renders the simulation at desktop size and scales it down
+  function fitScreens() {
+    Array.prototype.forEach.call(document.querySelectorAll('.screen iframe'), function (f) {
+      var w = f.parentNode.clientWidth; if (w) f.style.transform = 'scale(' + (w / 1024) + ')';
+    });
+  }
+  window.addEventListener('resize', fitScreens);
+  function openSim() {
+    var z = document.getElementById('simZoom'), box = document.getElementById('simBig');
+    if (!box.querySelector('iframe')) {
+      var fr = document.createElement('iframe');
+      fr.src = SIM; fr.title = 'محاكاة الدوائر الكهربائية من PhET'; fr.setAttribute('allow', 'fullscreen');
+      box.appendChild(fr);
+    }
+    z.hidden = false; document.getElementById('simClose').focus();
+  }
+
+  // ---------- artwork: a real-life circuit (viewBox matches the page: 1000 x 1295) ----------
+  // gradients live in the shared <svg id="defs"> so they keep working while pages are hidden
+  function bulb(x, y, s, on) {
+    var coil = 'M-24 -52q3 -14 6 0q3 -14 6 0q3 -14 6 0q3 -14 6 0q3 -14 6 0q3 -14 6 0q3 -14 6 0q3 -14 6 0';
+    var g = '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ')">';
+    if (on) g += '<circle cx="0" cy="-80" r="250" fill="url(#halo)"/>';
+    g += '<path d="M-46 32C-46 4 -95 -22 -95 -80A95 95 0 1 1 95 -80C95 -22 46 4 46 32Z" fill="url(#' + (on ? 'glassOn' : 'glassOff') + ')" stroke="' + (on ? '#ffe9a0' : '#c3d2e2') + '" stroke-width="3"/>' +
+      '<path d="M-18 32L-10 -8H10L18 32Z" fill="#ffffff" fill-opacity=".28"/>' +
+      '<path d="M-16 32L-24 -52M16 32L24 -52" stroke="' + (on ? '#b88a2a' : '#8d969f') + '" stroke-width="3" fill="none"/>' +
+      (on ? '<path d="' + coil + '" stroke="#fff3b8" stroke-width="9" fill="none" filter="url(#soft)"/><path d="' + coil + '" stroke="#fffdf2" stroke-width="3" fill="none"/>'
+          : '<path d="' + coil + '" stroke="#59626b" stroke-width="3" fill="none"/>') +
+      '<path d="M-62 -122C-50 -152 -22 -167 8 -168" stroke="#ffffff" stroke-opacity=".75" stroke-width="8" stroke-linecap="round" fill="none"/>' +
+      '<rect x="-49" y="30" width="98" height="14" rx="5" fill="url(#metal)"/>' +
+      '<rect x="-46" y="44" width="92" height="58" fill="url(#metal)"/>' +
+      '<path d="M-46 52L46 44M-46 66L46 58M-46 80L46 72M-46 94L46 86" stroke="#4d545b" stroke-opacity=".55" stroke-width="3"/>' +
+      '<path d="M-40 102H40L30 118H-30Z" fill="#2b2f33"/><rect x="-12" y="116" width="24" height="10" rx="4" fill="url(#brass)"/>' +
+      '</g>';
+    return g;
+  }
+  function battery(x, y, s) {   // a real AA cell lying on its side: + on the right
+    return '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ')" filter="url(#drop)">' +
+      '<rect x="-180" y="-46" width="14" height="92" rx="5" fill="url(#steel)"/>' +
+      '<rect x="-170" y="-52" width="252" height="104" rx="10" fill="url(#battBody)"/>' +
+      '<rect x="70" y="-52" width="84" height="104" rx="8" fill="url(#battCap)"/>' +
+      '<rect x="152" y="-22" width="22" height="44" rx="6" fill="url(#steel)"/>' +
+      '<rect x="-160" y="-41" width="306" height="10" rx="5" fill="#ffffff" fill-opacity=".16"/>' +
+      '<text x="-46" y="14" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="40" fill="#ffffff" fill-opacity=".92">1.5V</text>' +
+      '<text x="112" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="48" fill="#3b1d05">+</text>' +
+      '<text x="-140" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="48" fill="#cfd6dd">−</text>' +
+      '</g>';
+  }
+  function wire(d, red, w) {   // an insulated cable with a soft shadow and a shine line
+    w = w || 15;
+    return '<path d="' + d + '" fill="none" stroke="#000000" stroke-opacity=".28" stroke-width="' + (w + 3) + '" stroke-linecap="round" transform="translate(0 5)"/>' +
+      '<path d="' + d + '" fill="none" stroke="' + (red ? '#c62828' : '#263238') + '" stroke-width="' + w + '" stroke-linecap="round"/>' +
+      '<path d="' + d + '" fill="none" stroke="' + (red ? '#ff8a80' : '#90a4ae') + '" stroke-opacity=".55" stroke-width="' + Math.max(2, w * 0.27) + '" stroke-linecap="round" transform="translate(-2.5 -2.5)"/>';
+  }
+  function paperclipSwitch(x, y, s, closed) {   // the paperclip switch from problem 1, standing upright
+    var clip = '<path d="M-40 0H40A12 12 0 0 0 40 -24H-30A9 9 0 0 0 -30 -6H28" fill="none" stroke="#cfd8dc" stroke-width="5" stroke-linecap="round"/>' +
+               '<path d="M-40 0H40A12 12 0 0 0 40 -24H-30A9 9 0 0 0 -30 -6H28" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>';
+    return '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ') rotate(90)" filter="url(#drop)">' +
+      '<rect x="-72" y="-40" width="144" height="80" rx="10" fill="url(#card)" stroke="#8a6436" stroke-width="2"/>' +
+      '<circle cx="40" cy="0" r="13" fill="url(#brass)" stroke="#7a5a10" stroke-width="2"/>' +
+      (closed ? clip : '<g transform="rotate(-38 -40 0)">' + clip + '</g>') +
+      '<circle cx="-40" cy="0" r="13" fill="url(#brass)" stroke="#7a5a10" stroke-width="2"/>' +
+      '</g>';
+  }
+  // a whole circuit: lamp at the top, AA cell at the bottom, red wire on the right, black wire and switch on the left
+  function scene(o) {
+    var bx = o.cx, by = o.by, bs = o.bs, ty = o.ty, ts = o.ts, L = o.L, R = o.R;
+    var my = Math.round((by + ty) / 2 + 40), sw = o.sws || 1;
+    var bl = (bx - 46 * bs), br = (bx + 46 * bs), bty = by + 74 * bs;
+    var neg = bx - 180 * ts, pos = bx + 174 * ts;
+    var red = 'M' + pos + ' ' + ty + 'C' + (R - 60) + ' ' + ty + ' ' + R + ' ' + (ty - 30) + ' ' + R + ' ' + (ty - 140 * ts) +
+              'L' + R + ' ' + (bty + 170 * bs) + 'C' + R + ' ' + (bty + 60 * bs) + ' ' + (br + 90 * bs) + ' ' + bty + ' ' + br + ' ' + bty;
+    var blk1 = 'M' + neg + ' ' + ty + 'C' + (L + 60) + ' ' + ty + ' ' + L + ' ' + (ty - 30) + ' ' + L + ' ' + (ty - 140 * ts) + 'L' + L + ' ' + (my + 40 * sw);
+    var blk2 = 'M' + L + ' ' + (my - 40 * sw) + 'L' + L + ' ' + (bty + 170 * bs) + 'C' + L + ' ' + (bty + 60 * bs) + ' ' + (bl - 90 * bs) + ' ' + bty + ' ' + bl + ' ' + bty;
+    var w = o.w || 15;
+    return wire(red, true, w) + wire(blk1, false, w) + wire(blk2, false, w) +
+      battery(bx, ty, ts) + paperclipSwitch(L, my, sw, o.closed) + bulb(bx, by, bs, o.closed);
+  }
+  function navyArt(kind) {
+    var s = '<svg class="art" viewBox="0 0 1000 1295" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
+      '<rect width="1000" height="1295" fill="url(#bgN)"/><rect width="1000" height="1295" fill="url(#gr)"/>';
+    if (kind === 'cover') s += scene({ cx: 500, by: 300, bs: 1.0, ty: 1130, ts: 0.92, L: 110, R: 890, closed: true, sws: 1.05, w: 16 });
+    else if (kind === 'divider') s += scene({ cx: 500, by: 255, bs: 0.8, ty: 1160, ts: 0.74, L: 105, R: 895, closed: true, sws: 0.9, w: 13 });
+    else if (kind === 'sim') s += '';
+    else {
+      // back cover: open circuit (lamp off) beside closed circuit (lamp on)
+      var card = function (x, closed, t1, t2) {
+        return '<rect x="' + x + '" y="110" width="400" height="610" rx="28" fill="#ffffff" fill-opacity=".06" stroke="#9cc6f2" stroke-opacity=".4" stroke-width="2"/>' +
+          scene({ cx: x + 200, by: 270, bs: 0.5, ty: 560, ts: 0.42, L: x + 52, R: x + 348, closed: closed, sws: 0.55, w: 9 }) +
+          '<text x="' + (x + 200) + '" y="668" text-anchor="middle" style="direction:rtl" font-family="Noto Kufi Arabic, Tahoma, Arial" font-weight="700" font-size="30" fill="#ffffff">' + t1 + '</text>' +
+          '<text x="' + (x + 200) + '" y="704" text-anchor="middle" style="direction:rtl" font-family="IBM Plex Sans Arabic, Tahoma, Arial" font-size="24" fill="' + (closed ? '#ffd45a' : '#a8c0dc') + '">' + t2 + '</text>';
+      };
+      s += card(530, false, 'دائرة كهربائية مفتوحة', 'لا يضيء المصباح') + card(70, true, 'دائرة كهربائية مغلقة', 'يضيء المصباح') +
+        '<path d="M520 415H482M496 401L482 415L496 429" fill="none" stroke="#ffd45a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
+    return s + '</svg>';
+  }
+  var PAPER_ART = '<svg class="art" viewBox="0 0 1000 1295" aria-hidden="true">' +
+    '<g fill="none" stroke="#4a7ebb" stroke-opacity=".55" stroke-width="2.4" stroke-linecap="round">' +
+    '<path d="M28 150V48Q28 28 48 28H190"/><path d="M972 150V48Q972 28 952 28H810"/>' +
+    '<path d="M28 1150V1247Q28 1267 48 1267H120"/><path d="M972 1150V1247Q972 1267 952 1267H880"/>' +
+    '<path d="M120 1262H880" stroke-opacity=".35"/></g>' +
+    '<g fill="#4a7ebb" fill-opacity=".7"><circle cx="190" cy="28" r="6"/><circle cx="810" cy="28" r="6"/><circle cx="28" cy="150" r="6"/><circle cx="972" cy="150" r="6"/><circle cx="28" cy="1150" r="6"/><circle cx="972" cy="1150" r="6"/></g>' +
+    '</svg>';
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  var book = document.getElementById('book');
+  var lazy = [];
+  P.forEach(function (p, idx) {
+    var page = el('div', 'page');
+    if (p.t !== 'page') page.setAttribute('data-density', 'hard');
+    var pg = el('div', 'pg');
+    if (p.t === 'sim') {
+      pg.classList.add('navy');
+      pg.innerHTML = navyArt('sim');
+      var c = el('div', 'simpage');
+      c.appendChild(el('div', 'eyebrow', 'ملحق (16) · محاكاة PhET'));
+      c.appendChild(el('div', 'simtitle', 'جرّب الدائرة الكهربائية بنفسك'));
+      var mon = el('div', 'monitor');
+      var scr = el('div', 'screen');
+      var power = el('button', 'power');
+      power.type = 'button';
+      power.appendChild(el('span', 'pw-ico', '⏻'));
+      power.appendChild(el('span', 'pw-t', 'تشغيل المحاكاة على الشاشة'));
+      power.appendChild(el('span', 'pw-s', 'مجموعة بناء الدوائر: تيار مستمر'));
+      scr.appendChild(power);
+      mon.appendChild(el('span', 'cam'));
+      mon.appendChild(scr);
+      mon.appendChild(el('span', 'led'));
+      c.appendChild(mon);
+      c.appendChild(el('div', 'neck'));
+      c.appendChild(el('div', 'foot'));
+      var row = el('div', 'simrow');
+      var big = el('button', 'simbig', 'تكبير الشاشة'); big.type = 'button';
+      row.appendChild(big);
+      c.appendChild(row);
+      c.appendChild(el('div', 'simhow', 'اسحب البطارية والمصباح والمفتاح والأسلاك إلى لوحة العمل، وصِلها في دائرة، ثم أغلق المفتاح ليضيء المصباح وافتحه لينطفئ.'));
+      c.appendChild(el('div', 'simref', '(PhET Interactive Simulations, n.d.) · مواضع الاستشهاد في التقرير: المشكلة 1 — مهارات القرن 21: المعرفة الرقمية'));
+      c.appendChild(el('div', 'simlic', 'المحاكاة من PhET Interactive Simulations، جامعة كولورادو بولدر، برخصة CC BY 4.0.'));
+      pg.appendChild(c);
+      power.addEventListener('click', function () {
+        if (scr.querySelector('iframe')) return;
+        var fr = document.createElement('iframe');
+        fr.src = SIM; fr.title = 'محاكاة الدوائر الكهربائية من PhET'; fr.setAttribute('allow', 'fullscreen');
+        scr.appendChild(fr); mon.classList.add('on'); power.hidden = true; fitScreens();
+      });
+      big.addEventListener('click', openSim);
+      // presses on the computer and its buttons must not start a page turn
+      [mon, big].forEach(function (n) {
+        ['mousedown', 'touchstart'].forEach(function (ev) { n.addEventListener(ev, function (e) { e.stopPropagation(); }, { passive: true }); });
+      });
+    } else if (p.t === 'cover' || p.t === 'back' || p.t === 'divider') {
+      pg.classList.add('navy');
+      pg.innerHTML = navyArt(p.t);
+      var t = el('div', 'txt ' + p.t);
+      if (p.t === 'cover') {
+        t.appendChild(el('div', 'eyebrow', 'مقرر TCST418 · تعليم STEAM لمعلمي المرحلة الابتدائية'));
+        t.appendChild(el('div', 'num', 'الملاحق'));
+        t.appendChild(el('div', 'rule'));
+        t.appendChild(el('div', 'mid2', 'أدلة الاستشهادات في التكليف 3'));
+        t.appendChild(el('div', 'kind', 'مخطط تكاملي STEAM لدرس «استكشاف الكهرباء»'));
+        t.appendChild(el('div', 'ref', 'العلوم · الصف الثاني الابتدائي · الجزء الثاني · الوحدة السادسة: القوى والطاقة'));
+      } else if (p.t === 'back') {
+        t.appendChild(el('div', 'big', 'نهاية الملاحق'));
+        t.appendChild(el('div', 'rule'));
+        t.appendChild(el('div', 'mid2', 'الدائرة مغلقة… فأضاء المصباح'));
+        t.appendChild(el('div', 'ref', '«يجب أن تكون الدائرة موصلة تمامًا أي مغلقة حتى تتحرك فيها الكهرباء» (كتاب الطالب، ص. 104)'));
+      } else {
+        t.appendChild(el('div', 'eyebrow', 'ملحق'));
+        t.appendChild(el('div', 'num', String(p.i)));
+        t.appendChild(el('div', 'big', p.subj));
+        t.appendChild(el('div', 'rule'));
+        t.appendChild(el('div', 'mid2', p.grade));
+        t.appendChild(el('div', 'kind', p.kind));
+        t.appendChild(el('div', 'ref', p.ref));
+      }
+      pg.appendChild(t);
+    } else {
+      pg.classList.add('paper');
+      pg.innerHTML = PAPER_ART;
+      var w = el('div', 'wrap');
+      var h = el('div', 'hdr');
+      h.appendChild(el('div', 'code', '(' + p.code + ')'));
+      if (p.cap) h.appendChild(el('div', 'cap', p.cap));
+      if (p.locs) { var l = el('div', 'locs'); l.appendChild(el('b', null, 'مواضع الاستشهاد في التقرير: ')); l.appendChild(document.createTextNode(p.locs)); h.appendChild(l); }
+      w.appendChild(h);
+      var s = el('div', 'shot'); var im = el('img'); im.alt = p.code; im.setAttribute('data-src', p.img); im.decoding = 'async';
+      s.appendChild(im); w.appendChild(s); pg.appendChild(w);
+      lazy[idx] = im;
+      var f = el('div', 'ftr'); f.appendChild(el('span', 'lbl', 'ملحق (' + p.i + ') · ' + p.subj)); f.appendChild(el('span', 'no', String(idx + 1)));
+      pg.appendChild(f);
+    }
+    page.appendChild(pg); book.appendChild(page);
+  });
+  function load(i) { var im = lazy[i]; if (im && !im.src) im.src = im.getAttribute('data-src'); }
+  function loadAround(i) { for (var k = i - 3; k <= i + 6; k++) load(k); }
+
+  var toc = document.getElementById('toc');
+  TOC.forEach(function (t) { var o = document.createElement('option'); o.value = t[1]; o.textContent = t[0]; toc.appendChild(o); });
+  function section(i) { var s = TOC[0]; TOC.forEach(function (t) { if (t[1] <= i) s = t; }); return i === total - 1 ? ['نهاية الملاحق', i] : s; }
+
+  var count = document.getElementById('count'), where = document.getElementById('where'), fill = document.getElementById('fill');
+  var btns = { prev: [document.getElementById('prev'), document.getElementById('sidePrev')], next: [document.getElementById('next'), document.getElementById('sideNext')] };
+  var pf = null;
+
+  function update(i) {
+    loadAround(i);
+    var two = pf && pf.getOrientation() === 'landscape' && i > 0 && i + 1 < total;
+    count.textContent = (two ? ('الصفحتان ' + (i + 1) + '–' + (i + 2)) : ('الصفحة ' + (i + 1))) + ' من ' + total;
+    btns.prev.forEach(function (b) { b.disabled = i <= 0; });
+    btns.next.forEach(function (b) { b.disabled = i >= total - (two ? 2 : 1); });
+    var s = section(two ? i + 1 : i); where.textContent = s[0];
+    var opt = section(i); if (opt[0] !== 'نهاية الملاحق') toc.value = String(opt[1]);
+    fill.style.width = (((two ? i + 2 : i + 1) / total) * 100).toFixed(1) + '%';
+    setTimeout(fitScreens, 60);
+  }
+
+  if (typeof St === 'undefined' || !St.PageFlip) {
+    // the page-flip library did not load: show the pages as a scrolling list instead
+    book.style.transform = 'none'; book.className = 'fallback';
+    lazy.forEach(function (im) { if (im) { im.loading = 'lazy'; im.src = im.getAttribute('data-src'); } });
+    ['bar', 'sidePrev', 'sideNext'].forEach(function (id) { document.getElementById(id).hidden = true; });
+    document.querySelector('.hint').hidden = true; document.querySelector('.wire').hidden = true;
+    Array.prototype.forEach.call(book.querySelectorAll('.pg'), function (g) { g.style.transform = 'none'; });
+    toc.addEventListener('change', function () { book.children[+toc.value].scrollIntoView({ behavior: 'smooth' }); where.textContent = section(+toc.value)[0]; });
+    return;
+  }
+
+  var pageH = Math.max(320, Math.min(900, window.innerHeight - 250));
+  var pageW = Math.round(pageH * 1000 / 1295);
+  document.getElementById('bookwrap').style.maxWidth = (pageW * 2) + 'px';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  loadAround(0);
+  pf = new St.PageFlip(book, {
+    width: pageW, height: pageH, size: 'stretch',
+    minWidth: 200, maxWidth: pageW, minHeight: 259, maxHeight: pageH,
+    showCover: true, usePortrait: true, mobileScrollSupport: true,
+    maxShadowOpacity: 0.45, flippingTime: reduce ? 250 : 850, drawShadow: !reduce
+  });
+  pf.loadFromHTML(document.querySelectorAll('#book .page'));
+  pf.on('flip', function (e) { update(e.data); });
+  pf.on('changeOrientation', function () { update(pf.getCurrentPageIndex()); });
+  update(0);
+
+  btns.prev.forEach(function (b) { b.addEventListener('click', function () { pf.flipPrev(); }); });
+  btns.next.forEach(function (b) { b.addEventListener('click', function () { pf.flipNext(); }); });
+  toc.addEventListener('change', function () { var i = +toc.value; loadAround(i); pf.turnToPage(i); update(i); });
+  document.getElementById('simClose').addEventListener('click', function () { document.getElementById('simZoom').hidden = true; });
+  document.addEventListener('keydown', function (e) {
+    if (!document.getElementById('simZoom').hidden) { if (e.key === 'Escape') document.getElementById('simZoom').hidden = true; return; }
+    if (!document.getElementById('zoom').hidden) { if (e.key === 'Escape') closeZoom(); return; }
+    if (e.target === toc) return;
+    if (e.key === 'ArrowLeft') pf.flipNext();
+    else if (e.key === 'ArrowRight') pf.flipPrev();
+  });
+
+  var zoom = document.getElementById('zoom'), zp = document.getElementById('zoomPages');
+  function closeZoom() { zoom.hidden = true; zp.innerHTML = ''; document.getElementById('zoomBtn').focus(); }
+  document.getElementById('zoomBtn').addEventListener('click', function () {
+    var i = pf.getCurrentPageIndex();
+    var show = (pf.getOrientation() === 'landscape' && i > 0 && i + 1 < total) ? [i, i + 1] : [i];
+    if (show.some(function (k) { return P[k].t === 'sim'; })) { openSim(); return; }
+    zp.innerHTML = '';
+    var any = false;
+    show.forEach(function (k) {
+      var p = P[k]; if (p.t !== 'page') return; any = true;
+      var im = document.createElement('img'); im.src = p.img; im.alt = '(' + p.code + ') مكبّرة'; zp.appendChild(im);
+    });
+    if (!any) zp.appendChild(el('p', 'zoomnote', 'هذه صفحة فاصلة لا تحوي صورة من كتاب. قلّب إلى صفحة كتاب ثم اضغط «تكبير الصفحة».'));
+    document.getElementById('zoomTitle').textContent = show.length > 1 ? ('الصفحتان ' + (i + 1) + ' و' + (i + 2)) : ('الصفحة ' + (i + 1));
+    zoom.hidden = false; zoom.scrollTop = 0; document.getElementById('zoomClose').focus();
+  });
+  document.getElementById('zoomClose').addEventListener('click', closeZoom);
+})();
+</script>
+
+</body>
+</html>
